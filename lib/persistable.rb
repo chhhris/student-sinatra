@@ -1,3 +1,5 @@
+# require_relative './student.rb'
+
 module Persistable
   module ClassMethods
 

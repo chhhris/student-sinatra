@@ -1,4 +1,5 @@
 require_relative './persistable.rb'
+# require_relative './student-scraper.rb'
 require "sqlite3"
 
 class Student
@@ -7,9 +8,9 @@ class Student
   ATTRIBUTES = {
     :id => "INTEGER PRIMARY KEY",
     :name => "TEXT",
-    :tagline => "TEXT",
-    :bio => "TEXT",
-    :treehouse_profile => "TEXT"
+    :twitter => "TEXT",
+    :linkedin => "TEXT",
+    :quote =>  "TEXT"
   }
 
   def self.attributes
@@ -19,7 +20,7 @@ class Student
   def self.find_by(*args)
     args.flatten.each do |arg|
       define_singleton_method("find_by_#{arg}") do |value|
-        result = self.database.execute "SELECT * FROM #{self.table_name} WHERE #{arg} = ?", value
+        result = self.database.execute "SELECT * FROM student WHERE #{arg} = ?", value
         new_from_db(result.first)
       end
     end
@@ -32,7 +33,7 @@ class Student
   end
 
   def self.all
-    results = database.execute "SELECT * FROM students;"
+    results = database.execute "SELECT * FROM student;"
     results.collect{|row| new_from_db(row)}
   end
 

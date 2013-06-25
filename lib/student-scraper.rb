@@ -1,4 +1,4 @@
-# Columns to add to Students table:
+# Columns to add to Student table:
 #  Name
 #  Profile Pic
 #  Social media links/ Twitter, LinkedIn, GitHub, Blog(RSS)
@@ -10,7 +10,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'sqlite3'
 
-database = "flatiron.db"
+database = "student.db"
 index_html = "http://students.flatironschool.com"
 
 
@@ -38,7 +38,7 @@ index_html = "http://students.flatironschool.com"
   begin
     db = SQLite3::Database.new database
     db = SQLite3::Database.open database
-    db.execute("DROP TABLE IF EXISTS Students")
+    db.execute("DROP TABLE IF EXISTS student")
   rescue SQLite3::Exception => e 
     puts "Exception occurred"
     puts e
@@ -50,7 +50,7 @@ index_html = "http://students.flatironschool.com"
   # Loop through each student profile URL in the array and insert all the info as a row in the students table
   students_html_array.each do |student_html|
 
-    if student_html != "#" #only scrape page if page linked to from index.html exists
+    if student_html != "#" && student_html != "students/jaltman.html" #only scrape page if page linked to from index.html exists
 
       begin
 
@@ -76,6 +76,14 @@ index_html = "http://students.flatironschool.com"
           social_media_selector = "div.social-icons a"
           new_student_hash[:twitter] = student_page.css("#{social_media_selector}" )[0].attr("href")
 
+          # To grab student LinkedIn link
+          student_linkedin_finder = "div.social-icons a"
+          new_student_hash[:linkedin] = student_page.css("#{student_linkedin_finder}")[1].attr('href')
+
+          # To grab student quote text
+          student_quote_finder = "li#text-7 h3"
+          new_student_hash[:quote] = student_page.css("#{student_quote_finder}").first.content
+
           # Get rest of columns for students
           # CODE TO BE FILLED
 
@@ -88,13 +96,13 @@ index_html = "http://students.flatironschool.com"
           db = SQLite3::Database.open database
 
           # create Students table if it doesn't exist
-          db.execute("CREATE TABLE IF NOT EXISTS Students(id INTEGER PRIMARY KEY AUTOINCREMENT, 
+          db.execute("CREATE TABLE IF NOT EXISTS student(id INTEGER PRIMARY KEY AUTOINCREMENT, 
                                                           #{columns_string})"
                     )
 
           # insert specific student into Students table if it doesn't exist
-          db.execute("DELETE FROM Students WHERE name=?", new_student_hash[:name])
-          db.execute("INSERT INTO Students(#{new_student_hash.keys.join(",")}) 
+          db.execute("DELETE FROM student WHERE name=?", new_student_hash[:name])
+          db.execute("INSERT INTO student(#{new_student_hash.keys.join(",")}) 
                                   VALUES (#{new_student_string})", new_student_hash
                     )
 

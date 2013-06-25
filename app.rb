@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require_relative './lib/student.rb'
 require_relative './lib/persistable.rb'
+require_relative './lib/student-scraper.rb'
 
 # Why is it a good idea to wrap our App class in a module?
 module StudentSite
