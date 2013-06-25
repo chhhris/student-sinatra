@@ -28,6 +28,11 @@ index_html = "http://students.flatironschool.com"
     students_html_array << student.attr("href").downcase
   end
 
+  # students_img_array = []
+  # students.each do |student|
+  #   students_img_array << student.attr("src").downcase
+  # end
+
   puts "\nThe students_html_array looks like this:\n #{students_html_array.inspect}"
 
   puts "\nThere are #{students_html_array.size} elements in the array"
@@ -50,12 +55,12 @@ index_html = "http://students.flatironschool.com"
   # Loop through each student profile URL in the array and insert all the info as a row in the students table
   students_html_array.each do |student_html|
 
-    if student_html != "#" && student_html != "students/jaltman.html" #only scrape page if page linked to from index.html exists
+    if student_html != "#" #only scrape page if page linked to from index.html exists
 
       begin
 
         puts # empty row
-        student_page = Nokogiri::HTML(open("#{index_html}/#{student_html}"))
+        student_page = Nokogiri::HTML(open("#{index_html}/#{student_html.downcase}"))
 
         # Get student's name
         name_css_selector = "h4.ib_main_header"
@@ -84,14 +89,15 @@ index_html = "http://students.flatironschool.com"
           student_quote_finder = "li#text-7 h3"
           new_student_hash[:quote] = student_page.css("#{student_quote_finder}").first.content
 
-          # Get rest of columns for students
-          # CODE TO BE FILLED
+          # Grab the profile pic
+          # student_pic_finder = "li.home-blog-post div.blog-thumb img"
+          # new_student_hash[:pic] = student_page.css("#{student_pic_finder}").first.content   
 
           new_student_string = new_student_hash.keys.to_s.gsub("]", "").gsub("[", "")
           columns_string = new_student_hash.keys.join(",").gsub(",", " TEXT, ") + " TEXT"
 
 
-          # start manipulating the database
+          # start manipulating the databaseLS
           # open the database
           db = SQLite3::Database.open database
 

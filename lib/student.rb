@@ -10,7 +10,8 @@ class Student
     :name => "TEXT",
     :twitter => "TEXT",
     :linkedin => "TEXT",
-    :quote =>  "TEXT"
+    :quote =>  "TEXT",
+    :pic => "TEXT"
   }
 
   def self.attributes
